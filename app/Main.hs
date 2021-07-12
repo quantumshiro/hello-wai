@@ -1,27 +1,28 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
-import qualified Network.Wai.Handler.Warp as Warp
-import qualified Network.Wai as Wai
-import qualified Network.HTTP.Types as HTypes
+  
+import Network.HTTP.Types (ok200, status200, status404)
+import Network.Wai (Application, responseLBS, responseBuilder, pathInfo)
+import Network.Wai.Handler.Warp (run) 
 
 main :: IO ()
-main = Warp.run 8000 router
+main = Network.Wai.Handler.Warp.run 8000 router
 
-router :: Wai.Application
+router :: Network.Wai.Application
 router req =
-  case Wai.pathInfo req of
+  case Network.Wai.pathInfo req of
     []       -> helloApp req
     ["foo"]  -> fooApp req
     _        -> notFoundApp req
 
-helloApp :: Wai.Application
+helloApp :: Network.Wai.Application
 helloApp req send 
-  = send $ Wai.responseBuilder HTypes.status200 [] "hello wai!"
+  = send $ Network.Wai.responseBuilder Network.HTTP.Types.status200 [] "hello wai!"
 
-fooApp :: Wai.Application
+fooApp :: Network.Wai.Application
 fooApp req send
-  = send $ Wai.responseBuilder HTypes.status200 [] "bar buz"
+  = send $ Network.Wai.responseBuilder Network.HTTP.Types.status200 [] "bar buz"
 
-notFoundApp :: Wai.Application
+notFoundApp :: Network.Wai.Application
 notFoundApp req send
-  = send $ Wai.responseBuilder HTypes.status404 [] "not found"
+  = send $ Network.Wai.responseBuilder Network.HTTP.Types.status404 [] "not found"
